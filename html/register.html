@@ -1,106 +1,76 @@
 <!doctype html>
 <html lang="es/ES">
   <head>
-    <link href="../css/estilo.css" rel="stylesheet" type="text/css" media="all"/>
-    <link rel="icon" type="image/png" href="../img/favicon.ico" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Registro - Prueba 2</title>
-    
-  </head>
-<body  style="background-color:#000000;margin-top: 10%;">   
-<form class="container col-md-3 bg-light" style=" padding: 15px; border-radius: 5%; opacity: 90%;">
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputEmail4">Correo electrónico</label>
-        <input type="email" class="form-control" id="inputEmail4"  placeholder="Email" required>
-      </div>
-      <div class="form-group col-md-6">
-        <label for="inputPassword4">Contraseña</label>
-        <input type="password" class="form-control" id="inputPassword4" placeholder="********" required>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputAddress">Dirección</label>
-      <input type="text" class="form-control" id="inputAddress" placeholder="Cochayuyo nuevo 1909" required>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-5">
-        <label for="inputState">País</label>
-        <select id="inputState" class="form-control" required>
-          <option selected>Escoja un país</option>
-           <option>Obviamente Chile</option>
-        </select>
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputState">Región</label>
-        <select id="inputState" class="form-control" required>
-          <option selected>Escoja una región</option>
-           <option >Región de Arica y Parinacota</option>
-           <option > Región de Tarapacá</option>
-            <option >Región de Antofagasta</option>
-            <option >Región de Atacama</option>
-            <option >Región de Coquimbo</option>
-            <option >Región de Valparaíso</option>
-            <option >Región Metropolitana de Santiago</option>
-            <option >Región del Libertador General Bernardo O’Higgins</option>
-          | <option >Región del Maule</option>
-            <option >Región del Ñuble</option>
-            <option >Región del Biobío</option>
-            <option >Región de La Araucanía</option>
-            <option >Región de Los Ríos</option>
-            <option >Región de Los Lagos</option>                                                  
-            <option >Región de Aysén del General Carlos Ibáñez del Campo</option>
-            <option >Región de Magallanes y la Antártica Chilena</option>
-        </select>
-      </div>
-      <div class="form-group col-md-3">
-        <label for="inputZip">Código postal</label>
-        <input type="text" class="form-control" id="inputZip" required>
-      </div>
-    </div>
-    <div class="form-group" style="opacity: 100%;">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="gridCheck" required>
-        <label class="form-check-label" for="gridCheck" >
-          <a href="#" data-toggle="modal" data-target="#exampleModal"> He leído y acepto los términos y condiciones de servicio</a>
-        </label>
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel" style="color:black;">Términos y condiciones de servicios</h5>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close" data-keyboard="true">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body" style="color: black;">
-                
-                Principalmente, usted al aceptar este tratado de convergencia entre ambos mundos, TU mundo y MI mundo finalmente se unirán a traves del inevitable quiebre 
-                del espacio-tiempo, lo que generará una colisión inminente entre lo real y lo irreal. Esto con el fin de dejar al universo y sus propias reglas en jaque,
-                y así cambiar abruptamente su valor de 1, a nulo. Esto permitirá que el universo se rechace a si mismo, y desaparezca tal y como nació, de la nada.
-                Hoy, he decidido crear estos términos y condiciones que todos deberían leer antes de aceptar, sin embargo yo
-                creo que nadie se dará la lata de hacerlo, quizá por que nadie se de cuenta que existen, o quizá si, probablemente usted profesor,
-                lo verá y dirá "oh wow que innecesario", y yo le diré "si, pero quedó de pana".
+    <script>  
+      $(document).ready(function(){
+      $("#usererror").hide();
+      $("#passerror").hide();
+        $("#register").submit(function(){
+          $("#validar").click(function(){
+              var form = new FormData();
+              form.append("username", "#username");
+              form.append("email", "#email");
+              form.append("password1", "#password1");
+              form.append("password2", "#password2");
 
-                
-                Ah, si, y tu alma también es pal diaulo.
-             
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-              </div>
-            </div>
-          </div>
+              var settings = {
+                "url": "http://nriverv.pythonanywhere.com/api/v1/validation/all/",
+                "method": "POST",
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+                "data": form
+              };
+
+              $.ajax(settings).done(function (response) {
+                var msj = " ";
+                if($("#username").val().trim().length< 4 || $("#usern").val().trim().length> 16) {
+                  msj="El usuario debe tener entre 4 y 16 carácteres";
+                  $("#usererror").html(msj);
+                  $("#usererror").show();
+                  event.preventDefault();
+                }
+              });
+
+        })
+
+      });
+    </script>
+  </head>
+  <body  style="background-color:#000000;margin-top: 10%;">
+    <form id="register" method="POST" class="container col-md-3 bg-light" style=" padding: 15px; border-radius: 5%; opacity: 90%;">
+        <div class="form-group container col-md-10">
+          <label>Usuario:</label>
+          <input type="text" id="username" class="form-control" placeholder="Ingrese un nombre de usuario">
         </div>
-      </div>
-    </div>
-    <br>
-    <button type="submit" class="btn btn-primary" style="display: block; margin:auto; background-color:rgb(134, 134, 202); border: none;">Registrarse</button>
-  </form>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+        <div class="form-group container col-md-10">
+          <label >Correo electrónico:</label>
+          <input type="text" id="email" class="form-control" placeholder="Ingrese su correo electrónico">
+        </div>
+
+        <div class="form-group container col-md-10">
+          <label>Contraseña:</label>
+          <input type="password"  id="password1" class="form-control"  placeholder="*********">
+        </div>
+
+        <div class="form-group container col-md-10">
+          <label>Confirmar contraseña:</label>
+          <input type="password" id="password2" class="form-control"  placeholder="*********" >
+        </div>
+        
+        <br>
+        <button  type="submit" id="validar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:blue; border: none; margin-bottom: 5px;">Validar </button>
+        <button  type="reset" class="btn btn-secondary container col-md-10" style="display: block; margin:auto; background-color:red; border: none; ">Limpiar </button>
+        <a href="login.html" style="color:rgb(134, 134, 202)" >¿Ya tienes una cuenta? Haz click aquí para iniciar sesión</a>
+        <br>
+      </form>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
