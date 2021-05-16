@@ -6,72 +6,131 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Registro - Prueba 2</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>  
-      $(document).ready(function(){
+    $(document).ready( function(){
       $("#usererror").hide();
+      $("#usererror2").hide();
+      $("#emailerror").hide();
+      $("#passerror1").hide();
+      $("#passerror2").hide();
       $("#passerror").hide();
-        $("#register").submit(function(){
-          $("#validar").click(function(){
-              var form = new FormData();
-              form.append("username", "#username");
-              form.append("email", "#email");
-              form.append("password1", "#password1");
-              form.append("password2", "#password2");
+      $("#registrar").hide();
+      $("#validar").click(function(){
+        var username = $("#username").val().trim();
+        var msj = " ";
+              if(!(username< 4 || username> 16)) {
+              msj="El usuario debe tener entre 4 y 16 carácteres";
+              $("#usererror").html(msj);
+              $("#usererror").show();
+              event.preventDefault();
+              }
+              
+             
+        var email = $("#email").val().trim();
+        function validateCorreo($correo) {
+                        var correoReg = /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/;
+                        return correoReg.test( $correo );
+                    }
+       console.log( validateCorreo(email));
+        var password1 = $("#password1").val().trim();
+        if(!(password1< 8 || password1> 16)) {
+              msj="La contraseña debe tener entre 8 y 16 carácteres";
+              $("#passerror1").html(msj);
+              $("#passerror1").show();
+              event.preventDefault();
+              }
+        var password2 = $("#password2").val().trim();
+        if(!(password1< 8 || password1> 16)) {
+              event.preventDefault();
+              }
+        if(password1 != password2) {
+          msj="Las contraseñas no son iguales";
+          $("#passerror").html(msj);
+          $("#passerror").show();
+          event.preventDefault();
+        }
+        var form = new FormData();
+        form.append("username", username);
+        form.append("email", email);
+        form.append("password1", password1);
+        form.append("password2", password2);
+        var settings = {
+        "url": "http://nriverv.pythonanywhere.com/api/v1/validation/all/",
+        "method": "POST",
+        "processData": false,
+        "mimeType": "multipart/form-data",
+        "contentType": false,
+        "data": form
+      };
 
-              var settings = {
-                "url": "http://nriverv.pythonanywhere.com/api/v1/validation/all/",
-                "method": "POST",
-                "processData": false,
-                "mimeType": "multipart/form-data",
-                "contentType": false,
-                "data": form
-              };
+      $.ajax(settings).done(function (response) {
+         json = JSON.parse(response);
 
-              $.ajax(settings).done(function (response) {
-                var msj = " ";
-                if($("#username").val().trim().length< 4 || $("#usern").val().trim().length> 16) {
-                  msj="El usuario debe tener entre 4 y 16 carácteres";
-                  $("#usererror").html(msj);
-                  $("#usererror").show();
-                  event.preventDefault();
-                }
-              });
-
-        })
-
+         console.log('error: ', json.errorUsername);
+         console.log('error: ', json.errorEmail);
+         var erroruser = json.errorUsername;
+         if(erroruser== true){
+          msj="El nombre de usuario ya está en uso";
+              $("#usererror2").html(msj);
+              $("#usererror2").show();
+              event.preventDefault();
+              }
+          var errormail = json.errorEmail;
+         if(errormail== true){
+          msj="El email ya está en uso";
+              $("#emailerror").html(msj);
+              $("#emailerror").show();
+              event.preventDefault();
+              }
       });
+      
+        
+      })
+
+
+    
+    });
+  
     </script>
   </head>
   <body  style="background-color:#000000;margin-top: 10%;">
-    <form id="register" method="POST" class="container col-md-3 bg-light" style=" padding: 15px; border-radius: 5%; opacity: 90%;">
+    <form id="register" method="POST" class="container col-md-6 bg-light" style="padding: 15px; border-radius: 5%; opacity: 90%;">
+      <img src="../img/user-login.png" alt="" height="200px" width="auto" style="display: block; margin:auto;">
         <div class="form-group container col-md-10">
           <label>Usuario:</label>
           <input type="text" id="username" class="form-control" placeholder="Ingrese un nombre de usuario">
+          <div id="usererror" class="alert alert-danger col-md-12" width="70px" role="alert" style="margin-top: 5px;"></div>
+          <div id="usererror2" class="alert alert-danger col-md-12" width="70px" role="alert" style="margin-top: 5px;"></div>
         </div>
 
         <div class="form-group container col-md-10">
           <label >Correo electrónico:</label>
           <input type="text" id="email" class="form-control" placeholder="Ingrese su correo electrónico">
+          <div id="emailerror" class="alert alert-danger col-md-12" width="70px" role="alert" style="margin-top: 5px;"></div>
         </div>
 
         <div class="form-group container col-md-10">
           <label>Contraseña:</label>
           <input type="password"  id="password1" class="form-control"  placeholder="*********">
+          <div id="passerror1" class="alert alert-danger col-md-12" width="70px" role="alert" style="margin-top: 5px;"></div>
         </div>
 
         <div class="form-group container col-md-10">
           <label>Confirmar contraseña:</label>
           <input type="password" id="password2" class="form-control"  placeholder="*********" >
+          <div id="passerror2" class="alert alert-danger col-md-12" width="70px" role="alert" style="margin-top: 5px;"></div>
+          <div id="passerror" class="alert alert-danger col-md-12" width="70px" role="alert" style="margin-top: 5px;"></div>
         </div>
         
         <br>
-        <button  type="submit" id="validar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:blue; border: none; margin-bottom: 5px;">Validar </button>
+        <button  type="button" id="validar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:blue; border: none; margin-bottom: 5px;">Validar </button>
+        <button  type="submit" id="registrar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:green; border: none; margin-bottom: 5px;"> Crear cuenta</button>
         <button  type="reset" class="btn btn-secondary container col-md-10" style="display: block; margin:auto; background-color:red; border: none; ">Limpiar </button>
         <a href="login.html" style="color:rgb(134, 134, 202)" >¿Ya tienes una cuenta? Haz click aquí para iniciar sesión</a>
         <br>
       </form>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
