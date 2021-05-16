@@ -18,10 +18,17 @@
       $("#passerror2").hide();
       $("#passerror").hide();
       $("#registrar").hide();
+      $("#success").hide();
       $("#validar").click(function(){
+      $("#usererror").hide();
+      $("#usererror2").hide();
+      $("#emailerror").hide();
+      $("#passerror1").hide();
+      $("#passerror2").hide();
+      $("#passerror").hide();
         var username = $("#username").val().trim();
         var msj = " ";
-              if(!(username< 4 || username> 16)) {
+              if(username< 4 || username> 16) {
               msj="El usuario debe tener entre 4 y 16 carácteres";
               $("#usererror").html(msj);
               $("#usererror").show();
@@ -34,16 +41,16 @@
                         var correoReg = /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/;
                         return correoReg.test( $correo );
                     }
-       console.log( validateCorreo(email));
+
         var password1 = $("#password1").val().trim();
-        if(!(password1< 8 || password1> 16)) {
+          if($("#password1").val().trim().length< 8 || $("#password1").val().trim().length> 16) {
               msj="La contraseña debe tener entre 8 y 16 carácteres";
               $("#passerror1").html(msj);
               $("#passerror1").show();
               event.preventDefault();
               }
         var password2 = $("#password2").val().trim();
-        if(!(password1< 8 || password1> 16)) {
+        if($("#password2").val().trim().length< 8 || $("#password2").val().trim().length> 16) {
               event.preventDefault();
               }
         if(password1 != password2) {
@@ -64,9 +71,9 @@
         "mimeType": "multipart/form-data",
         "contentType": false,
         "data": form
-      };
-
-      $.ajax(settings).done(function (response) {
+       };
+     
+       $.ajax(settings).done(function (response) {
          json = JSON.parse(response);
 
          console.log('error: ', json.errorUsername);
@@ -85,11 +92,40 @@
               $("#emailerror").show();
               event.preventDefault();
               }
-      });
-      
-        
-      })
+        if(erroruser==false && errormail==false && msj==" " ){
+        $("#validar").hide();
+        $("#registrar").show();
+        $("#register").submit (function(){
+          var form2= new FormData();
+        form2.append("username", username);
+        form2.append("email", email);
+        form2.append("password", password1);
 
+        var settings2 = {
+          "url": "http://nriverv.pythonanywhere.com/api/v1/signup/",
+          "method": "POST",
+          "timeout": 0,
+          "processData": false,
+          "mimeType": "multipart/form-data",
+          "contentType": false,
+          "data": form2
+        };
+        
+          $.ajax(settings2).done(function (response) {
+            console.log(response);
+
+          });
+             alert("¡La cuenta fue creada con éxito!")
+        });
+        
+
+        }
+  
+      })
+      
+
+      });
+       
 
     
     });
@@ -126,11 +162,13 @@
         </div>
         
         <br>
-        <button  type="button" id="validar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:blue; border: none; margin-bottom: 5px;">Validar </button>
-        <button  type="submit" id="registrar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:green; border: none; margin-bottom: 5px;"> Crear cuenta</button>
+        <div id="success" class="alert alert-success col-md-12" width="70px" role="alert" style="margin-top: 5px;"></div>
+        <button  type="button"  id="validar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:blue; border: none; margin-bottom: 5px;">Validar </button>
+        <a href="login.html"></a><button  type="submit"   id="registrar" class="btn btn-primary container col-md-10" style="display: block; margin:auto; background-color:green; border: none; margin-bottom: 5px; color: white; text-decoration: none;"> Crear cuenta</button></a>
         <button  type="reset" class="btn btn-secondary container col-md-10" style="display: block; margin:auto; background-color:red; border: none; ">Limpiar </button>
         <a href="login.html" style="color:rgb(134, 134, 202)" >¿Ya tienes una cuenta? Haz click aquí para iniciar sesión</a>
         <br>
+        
       </form>
 </body>
 </html>
