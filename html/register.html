@@ -37,7 +37,13 @@
               
              
         var email = $("#email").val().trim();
-
+        if($("#email").val().indexOf('@', 0) == -1 || $("#email").val().indexOf('.', 0) == -1) {
+          msj="El formato del correo debe ser el siguiente: ejemplo@correo.com";
+              $("#emailerror").html(msj);
+              $("#emailerror").show();
+              event.preventDefault();
+              }
+        
 
         var password1 = $("#password1").val().trim();
           if($("#password1").val().trim().length< 8 || $("#password1").val().trim().length> 16) {
