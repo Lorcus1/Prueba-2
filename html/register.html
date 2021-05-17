@@ -37,10 +37,7 @@
               
              
         var email = $("#email").val().trim();
-        function validateCorreo($correo) {
-                        var correoReg = /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/;
-                        return correoReg.test( $correo );
-                    }
+
 
         var password1 = $("#password1").val().trim();
           if($("#password1").val().trim().length< 8 || $("#password1").val().trim().length> 16) {
@@ -72,6 +69,7 @@
         "contentType": false,
         "data": form
        };
+       
      
        $.ajax(settings).done(function (response) {
          json = JSON.parse(response);
@@ -96,32 +94,30 @@
         $("#validar").hide();
         $("#registrar").show();
         $("#register").submit (function(){
-          var form2= new FormData();
-        form2.append("username", username);
-        form2.append("email", email);
-        form2.append("password", password1);
+        var form = new FormData();
+        form.append("username", username);
+        form.append("email", email);
+        form.append("password", password1);
 
-        var settings2 = {
-          "url": "http://nriverv.pythonanywhere.com/api/v1/signup/",
+        var settings = {
+          "url": "http://nriverv.pythonanywhere.com/api/v1/signup/?username=user1&email=user1@correo.cl&password1=12345678&password2=12345678",
           "method": "POST",
           "timeout": 0,
           "processData": false,
           "mimeType": "multipart/form-data",
           "contentType": false,
-          "data": form2
+          "data": form
         };
+        alert("¡La cuenta fue creada con éxito!");
+        $.ajax(settings).done(function (response) {
+          
+        })
         
-          $.ajax(settings2).done(function (response) {
-            console.log(response);
-
-          });
-             alert("¡La cuenta fue creada con éxito!")
+             
         });
-        
-
         }
   
-      })
+      });
       
 
       });
